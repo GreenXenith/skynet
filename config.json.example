@@ -1,0 +1,19 @@
+{
+	"token": "Bot ABCDEFGHIJKLMNOPQRSTUVWXYZ.1234567890",
+	
+	"irc": {
+		"channel": "#my-awesome-channel",
+		"server": "irc.freenode.net",
+		"nickname": "Discord"
+	},
+
+	"discord": {
+		"server": "1234567890", // Guild ID
+		"channel": "0987654321" // Channel ID
+	},
+
+	"minetest": {
+		"nickname": "myserver", // Same as IRC mod (irc.nick in minetest.conf)
+		"avatar": "https://i.imgur.com/someimage.png" // Optional
+	}
+}
