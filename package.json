@@ -1,0 +1,12 @@
+{
+	"name": "skynet",
+	"version": "1.0.0",
+	"description": "Minetest-IRC-Discord Relay bot.",
+	"main": "skynet.js",
+	"dependencies": {
+		"discord-js": "^11.5.1",
+		"request": "^2.88.1"
+	},
+	"author": "GreenXenith",
+	"license": "MIT"
+}
