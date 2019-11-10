@@ -158,7 +158,15 @@ discord.on("message", message => {
 	if (message.author == discord.user) return;
 
 	if (message.channel == discord.relayChannel && !message.webhookID && !message.content.toLowerCase().startsWith("[offirc]")) {
-		irc.say(config.irc.channel, `<${message.guild.members.get(message.author.id).nickname || message.author.username}> ${discordToIRC(message)}`);
+		const lmc = message.content.toLowerCase(); // lowercase message content
+		const sender = message.guild.members.get(message.author.id).nickname || message.author.username;
+		const msg = discordToIRC(message);
+		if (lmc.startsWith(`${config.minetest.nickname.toLowerCase()},`) || lmc.match(/^!\w/)) {
+			irc.say(config.irc.channel, `Command sent by ${sender}:`);
+			irc.say(config.irc.channel, `${msg}`)
+		} else {
+			irc.say(config.irc.channel, `<${sender}> ${msg}`);
+		}
 	} else if (message.channel.type === "dm") {
 		const msg = discordToIRC(message);
 		let args = msg.split(" ");
