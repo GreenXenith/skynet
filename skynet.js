@@ -62,16 +62,16 @@ discord.once("ready", () => {
 		let hook = hooks.find(val => val.owner == discord.user);
 		if (!hook) {
 			channel.createWebhook("Skynet", "https://i.imgur.com/WPIFG2B.png").then(newHook => {
-				hook = newHook;
+				discord.relay = newHook;
+				discord.relayChannel = channel;
+				amReady();
 				console.log("Created new relay webhook.");
-			}).then(() => {
-				discord.relay = hook;
 			});
 		} else {
 			discord.relay = hook;
+			discord.relayChannel = channel;
+			amReady();
 		}
-		discord.relayChannel = channel;
-		amReady();
 	});
 
 	discord.user.setActivity("everyone.", {type: "LISTENING"});
