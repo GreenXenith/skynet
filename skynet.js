@@ -64,9 +64,12 @@ discord.once("ready", () => {
 			channel.createWebhook("Skynet", "https://i.imgur.com/WPIFG2B.png").then(newHook => {
 				hook = newHook;
 				console.log("Created new relay webhook.");
+			}).then(() => {
+				discord.relay = hook;
 			});
+		} else {
+			discord.relay = hook;
 		}
-		discord.relay = hook;
 		discord.relayChannel = channel;
 		amReady();
 	});
