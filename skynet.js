@@ -238,13 +238,14 @@ irc.on("message", event => {
 				} else {
 					let id = queue.shift();
 					if (!id) {
-						if (process.hrtime()[0] === last[1]) {
+						if (Date.now() === last[1]) {
 							id = last[0];
 						} else {
+							last = ["", 0];
 							return;
 						}
 					} else {
-						last = [id, process.hrtime()[0]];
+						last = [id, Date.now()];
 					}
 					discord.channels.get(id).send(IRCToDiscord(event.message));
 				}
