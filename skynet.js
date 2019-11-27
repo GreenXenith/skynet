@@ -272,19 +272,19 @@ function notice(payload) {
 }
 
 irc.on("join", event => {
-	notice(`_${event.nick}_ has joined the channel.`);
+	notice(`_${event.nick.replace(/[_*|~`]/g, "\\$&")}_ has joined the channel.`);
 });
 
 irc.on("part", event => {
-	notice(`_${event.nick}_ has left the channel.`);
+	notice(`_${event.nick.replace(/[_*|~`]/g, "\\$&")}_ has left the channel.`);
 });
 
 irc.on("kick", event => {
-	notice(`_${event.kicked}_ has been kicked from the channel by _${event.nick}_.`);
+	notice(`_${event.kicked.replace(/[_*|~`]/g, "\\$&")}_ has been kicked from the channel by _${event.nick}_.`);
 });
 
 irc.on("quit", event => {
-	notice(`_${event.nick}_ has quit (_${event.message || "Leaving"}_)`);
+	notice(`_${event.nick.replace(/[_*|~`]/g, "\\$&")}_ has quit (_${event.message || "Leaving"}_)`);
 });
 
 // Launch
