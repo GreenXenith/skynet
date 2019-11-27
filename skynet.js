@@ -266,7 +266,7 @@ irc.on("action", event => {
 
 function notice(payload) {
 	discord.relay.send(payload, {
-		username: config.irc.nickname,
+		username: config.irc.channel,
 		avatarURL: defaultAvatar,
 	})
 }
