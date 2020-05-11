@@ -94,7 +94,7 @@ irc.on("join", event => {
 const snowflakes = {
 	user: function(message, content) {
 		message.mentions.users.forEach(user => {
-			content = content.replace(`<@${user.id}>`, `@${user.username}`);
+			content = content.replace(`<@!${user.id}>`, `@${user.username}`);
 		});
 		return content;
 	},
