@@ -61,7 +61,7 @@ discord.once("ready", () => {
 	channel.fetchWebhooks().then(hooks => {
 		let hook = hooks.find(val => val.owner == discord.user);
 		if (!hook) {
-			channel.createWebhook("Skynet", "https://i.imgur.com/WPIFG2B.png").then(newHook => {
+			channel.createWebhook("Skynet", {avatar: "https://i.imgur.com/WPIFG2B.png"}).then(newHook => {
 				discord.relay = newHook;
 				discord.relayChannel = channel;
 				amReady();
