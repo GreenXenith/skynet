@@ -124,7 +124,7 @@ function discordToIRC(message) {
 
 	content = content.replace(/\n/g, " "); // Newlines
 
-	content = content.replace(/\|\|.+?\|\|/g, "[SPOILER]");
+	// content = content.replace(/\|\|.+?\|\|/g, "[SPOILER]");
 
 	content = parseSnowflakes(message, content);
 
