@@ -57,6 +57,7 @@ function amReady() {
 
 discord.once("ready", () => {
 	console.log(`Logged in to Discord as ${discord.user.tag}.`);
+
 	channel = discord.guilds.cache.get(config.discord.server).channels.cache.get(config.discord.channel);
 	channel.fetchWebhooks().then(hooks => {
 		let hook = hooks.find(val => val.owner == discord.user);
@@ -161,6 +162,7 @@ discord.on("message", message => {
 		const lmc = message.content.toLowerCase(); // lowercase message content
 		const sender = message.guild.members.cache.get(message.author.id).nickname || message.author.username;
 		const msg = discordToIRC(message);
+
 		if (lmc.startsWith(`${config.minetest.nickname.toLowerCase()},`) || lmc.match(/^!\w/)) {
 			irc.say(config.irc.channel, `Command sent by ${sender}:`);
 			irc.say(config.irc.channel, `${msg}`)
@@ -170,12 +172,15 @@ discord.on("message", message => {
 	} else if (message.channel.type === "dm") {
 		const msg = discordToIRC(message);
 		let args = msg.split(" ");
+
 		let aka = "";
 		const nick = discord.guilds.cache.get(config.discord.server).members.cache.get(message.author.id).nickname;
 		if (nick) aka = ` (aka ${nick})`;
+
 		if (args[0].startsWith("@")) {
 			args.splice(1, 0, `from ${message.author.tag}${aka}:`);
 		}
+
 		irc.say(config.minetest.nickname, args.join(" "));
 		queue.push(message.channel.id);
 	}
@@ -183,6 +188,7 @@ discord.on("message", message => {
 
 irc.on("message", event => {
 	if (!ready) return;
+
 	let avatar = defaultAvatar;
 	if (event.type == "privmsg") {
 		if (event.target == config.irc.channel) {
@@ -201,9 +207,11 @@ irc.on("message", event => {
 				if (event.message.startsWith("<")) {
 					const args = event.message.split(/ +/g);
 					let sender = args.shift().match(/^<([\w_-]+)>/);
+
 					if (!sender) return;
 					sender = sender[1];
 					const target = args.shift();
+
 					if (!target) return;
 					const msg = args.join(" ");
 
@@ -222,11 +230,13 @@ irc.on("message", event => {
 							delete matches[id];
 						}
 					});
+
 					const match = Object.entries(matches).sort((a, b) => {return a < b})[0];
 					if (!match) {
 						irc.say(config.minetest.nickname, `@${sender} Could not find Discord user "${target}".`)
 						return;
 					}
+
 					const id = match[0];
 					discord.fetchUser(id).then(user => {
 						let aka = "";
