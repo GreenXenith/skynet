@@ -57,7 +57,7 @@ function amReady() {
 
 discord.once("ready", () => {
 	console.log(`Logged in to Discord as ${discord.user.tag}.`);
-	channel = discord.guilds.get(config.discord.server).channels.get(config.discord.channel);
+	channel = discord.guilds.cache.get(config.discord.server).channels.cache.get(config.discord.channel);
 	channel.fetchWebhooks().then(hooks => {
 		let hook = hooks.find(val => val.owner == discord.user);
 		if (!hook) {
@@ -159,7 +159,7 @@ discord.on("message", message => {
 
 	if (message.channel == discord.relayChannel && !message.webhookID && !message.content.toLowerCase().startsWith("[offirc]")) {
 		const lmc = message.content.toLowerCase(); // lowercase message content
-		const sender = message.guild.members.get(message.author.id).nickname || message.author.username;
+		const sender = message.guild.members.cache.get(message.author.id).nickname || message.author.username;
 		const msg = discordToIRC(message);
 		if (lmc.startsWith(`${config.minetest.nickname.toLowerCase()},`) || lmc.match(/^!\w/)) {
 			irc.say(config.irc.channel, `Command sent by ${sender}:`);
@@ -171,7 +171,7 @@ discord.on("message", message => {
 		const msg = discordToIRC(message);
 		let args = msg.split(" ");
 		let aka = "";
-		const nick = discord.guilds.get(config.discord.server).members.get(message.author.id).nickname;
+		const nick = discord.guilds.cache.get(config.discord.server).members.cache.get(message.author.id).nickname;
 		if (nick) aka = ` (aka ${nick})`;
 		if (args[0].startsWith("@")) {
 			args.splice(1, 0, `from ${message.author.tag}${aka}:`);
@@ -208,7 +208,7 @@ irc.on("message", event => {
 					const msg = args.join(" ");
 
 					matches = {};
-					discord.guilds.get(config.discord.server).members.forEach(member => {
+					discord.guilds.cache.get(config.discord.server).members.forEach(member => {
 						const id = member.user.id;
 						matches[id] = 0;
 						if (member.user.tag == target) {
@@ -230,7 +230,7 @@ irc.on("message", event => {
 					const id = match[0];
 					discord.fetchUser(id).then(user => {
 						let aka = "";
-						const nick = discord.guilds.get(config.discord.server).members.get(user.id).nickname;
+						const nick = discord.guilds.cache.get(config.discord.server).members.cache.get(user.id).nickname;
 						if (nick) aka = ` (aka ${nick})`;
 						irc.say(config.minetest.nickname, `@${sender} Message sent to ${user.tag}${aka}.`)
 						user.send(`PM from ${sender}@${config.minetest.nickname}: ${msg}`);
@@ -247,7 +247,7 @@ irc.on("message", event => {
 					} else {
 						last = [id, Date.now() / 1000];
 					}
-					discord.channels.get(id).send(IRCToDiscord(event.message));
+					discord.channels.cache.get(id).send(IRCToDiscord(event.message));
 				}
 			}
 		}

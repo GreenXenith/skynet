@@ -4,9 +4,9 @@
 	"description": "Minetest-IRC-Discord Relay bot.",
 	"main": "skynet.js",
 	"dependencies": {
-		"discord.js": "^11.5.1",
-		"request": "^2.88.0",
-		"irc-framework": "^4.5.2"
+		"discord.js": "^12.2.0",
+		"irc-framework": "^4.5.2",
+		"request": "^2.88.0"
 	},
 	"author": "GreenXenith",
 	"license": "MIT"
