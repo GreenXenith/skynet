@@ -156,8 +156,10 @@ function IRCToDiscord(message) {
 
 	const channel = discord.guilds.cache.get(config.discord.server).channels.cache.get(config.discord.channel)
 	for (const mention of message.matchAll(/@([^\s]+)/g)) {
+		const name = mention[1].toLowerCase();
 		for (const member of channel.guild.members.cache) {
-			if (member[1].user.username.toLowerCase().includes(mention[1].toLowerCase())) {
+			if (member[1].user.username.toLowerCase().includes(name)
+				|| (member[1].nickname && member[1].nickname.toLowerCase().includes(name))) {
 				message = message.replace(mention[0], `<@${member[1].user.id}>`);
 			}
 		}
