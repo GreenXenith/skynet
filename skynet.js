@@ -155,6 +155,8 @@ function IRCToDiscord(message) {
 		}
 	}
 
+	message = message.replace(/@(everyone|here)/g, "$1");
+
 	return message;
 }
 
