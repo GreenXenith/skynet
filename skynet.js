@@ -131,6 +131,14 @@ function discordToIRC(message) {
 
 	content = content.replace(/<:(\w+?):\d+?>/g, ":$1:"); // Custom emotes
 
+	for (attachment of message.attachments.array()) {
+		if (content === "") {
+			content += attachment.url;
+		} else {
+			content += ` ${attachment.url}`;
+		}
+	}
+
 	return content;
 }
 
