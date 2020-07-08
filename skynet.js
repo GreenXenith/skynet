@@ -259,7 +259,7 @@ irc.on("message", (event) => {
 					}
 
 					const id = match[0];
-					discord.fetchUser(id).then(user => {
+					discord.users.fetch(id).then(user => {
 						let aka = "";
 						const nick = discord.guilds.cache.get(config.discord.server).members.cache.get(user.id).nickname;
 						if (nick) aka = ` (aka ${nick})`;
