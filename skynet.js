@@ -236,36 +236,24 @@ irc.on("message", (event) => {
 					if (!target) return;
 					const msg = args.join(" ");
 
-					matches = {};
-					discord.guilds.cache.get(config.discord.server).members.forEach(member => {
-						const id = member.user.id;
-						matches[id] = 0;
-						if (member.user.tag == target) {
-							matches[id] += 5;
-						} else if (member.user.username == target) {
-							matches[id] += 3;
-						} else if (member.nickname == target) {
-							matches[id] += 1;
-						}
-						if (matches[id] === 0) {
-							delete matches[id];
-						}
-					});
+					const name = target;
+					for (const member of discord.guilds.cache.get(config.discord.server).members.cache) {
+						const username = member[1].user.username;
+						const nickname = member[1].nickname || "";
+						const tag = member[1].user.tag;
 
-					const match = Object.entries(matches).sort((a, b) => {return a < b})[0];
-					if (!match) {
-						irc.say(config.minetest.nickname, `@${sender} Could not find Discord user "${target}".`)
-						return;
+						if (username == name || nickname == name || tag == name) {
+							let aka = "";
+							if (nickname != "") aka = ` (aka ${nickname})`;
+
+							irc.say(config.minetest.nickname, `@${sender} Message sent to ${tag}${aka}.`)
+							member[1].user.send(`PM from ${sender}@${config.minetest.nickname}: ${msg}`);
+
+							return;
+						}
 					}
 
-					const id = match[0];
-					discord.users.fetch(id).then(user => {
-						let aka = "";
-						const nick = discord.guilds.cache.get(config.discord.server).members.cache.get(user.id).nickname;
-						if (nick) aka = ` (aka ${nick})`;
-						irc.say(config.minetest.nickname, `@${sender} Message sent to ${user.tag}${aka}.`)
-						user.send(`PM from ${sender}@${config.minetest.nickname}: ${msg}`);
-					})
+					irc.say(config.minetest.nickname, `@${sender} Could not find user "${target}".`);
 				} else {
 					let id = queue.shift();
 					if (!id) {
