@@ -58,7 +58,7 @@ function amReady() {
 discord.once("ready", () => {
 	console.log(`Logged in to Discord as ${discord.user.tag}.`);
 
-	channel = discord.guilds.cache.get(config.discord.server).channels.cache.get(config.discord.channel);
+	const channel = discord.guilds.cache.get(config.discord.server).channels.cache.get(config.discord.channel);
 	channel.fetchWebhooks().then(hooks => {
 		let hook = hooks.find(val => val.owner == discord.user);
 		if (!hook) {
@@ -146,6 +146,15 @@ function IRCToDiscord(message) {
 		message = message.replace(rep, "");
 	}
 
+	const channel = discord.guilds.cache.get(config.discord.server).channels.cache.get(config.discord.channel)
+	for (const mention of message.matchAll(/@([^\s]+)/g)) {
+		for (const member of channel.guild.members.cache) {
+			if (member[1].user.username.toLowerCase().includes(mention[1].toLowerCase())) {
+				message = message.replace(mention[0], `<@${member[1].user.id}>`);
+			}
+		}
+	}
+
 	return message;
 }
 
@@ -154,7 +163,7 @@ const queue = [];
 let last = ["", 0];
 
 // Events
-discord.on("message", message => {
+discord.on("message", (message) => {
 	if (!ready) return;
 	if (message.author == discord.user) return;
 
@@ -186,7 +195,7 @@ discord.on("message", message => {
 	}
 });
 
-irc.on("message", event => {
+irc.on("message", (event) => {
 	if (!ready) return;
 
 	let avatar = defaultAvatar;
@@ -266,7 +275,7 @@ irc.on("message", event => {
 	}
 });
 
-irc.on("action", event => {
+irc.on("action", (event) => {
 	let avatar = defaultAvatar;
 	discord.relay.send(`_${IRCToDiscord(event.message)}_`, {
 		username: `${event.nick}@IRC`,
@@ -282,19 +291,19 @@ function notice(payload) {
 	})
 }
 
-irc.on("join", event => {
+irc.on("join", (event) => {
 	notice(`_${event.nick.replace(/[_*|~`]/g, "\\$&")}_ has joined the channel.`);
 });
 
-irc.on("part", event => {
+irc.on("part", (event) => {
 	notice(`_${event.nick.replace(/[_*|~`]/g, "\\$&")}_ has left the channel.`);
 });
 
-irc.on("kick", event => {
+irc.on("kick", (event) => {
 	notice(`_${event.kicked.replace(/[_*|~`]/g, "\\$&")}_ has been kicked from the channel by _${event.nick}_.`);
 });
 
-irc.on("quit", event => {
+irc.on("quit", (event) => {
 	notice(`_${event.nick.replace(/[_*|~`]/g, "\\$&")}_ has quit (_${event.message || "Leaving"}_)`);
 });
 
