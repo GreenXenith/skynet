@@ -91,43 +91,12 @@ irc.on("join", event => {
 	}
 });
 
-// Conversion functions
-const snowflakes = {
-	user: function(message, content) {
-		message.mentions.users.forEach(user => {
-			content = content.replace(`<@!${user.id}>`, `@${user.username}`);
-		});
-		return content;
-	},
-	channel: function(message, content) {
-		message.mentions.channels.forEach(channel => {
-			content = content.replace(`<#${channel.id}>`, `#${channel.name}`);
-		});
-		return content;
-	},
-	role: function(message, content) {
-		message.mentions.roles.forEach(role => {
-			content = content.replace(`<@&${role.id}>`, `@&${role.name}`);
-		});
-		return content;
-	},
-};
-
-function parseSnowflakes(message, content) {
-	for (const prop in snowflakes) {
-		content = snowflakes[prop](message, content);
-	}
-	return content;
-}
-
 function discordToIRC(message) {
-	let content = message.content;
+	let content = message.cleanContent;
 
 	content = content.replace(/\n/g, " "); // Newlines
 
 	// content = content.replace(/\|\|.+?\|\|/g, "[SPOILER]");
-
-	content = parseSnowflakes(message, content);
 
 	content = content.replace(/<:(\w+?):\d+?>/g, ":$1:"); // Custom emotes
 
